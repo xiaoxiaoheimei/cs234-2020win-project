@@ -14,6 +14,7 @@ from runners import REGISTRY as r_REGISTRY
 from controllers import REGISTRY as mac_REGISTRY
 from components.episode_buffer import ReplayBuffer
 from components.transforms import OneHot
+import pdb
 
 
 def run(_run, _config, _log):
@@ -167,6 +168,7 @@ def run_sequential(args, logger):
         buffer.insert_episode_batch(episode_batch)
 
         if buffer.can_sample(args.batch_size):
+            #pdb.set_trace()
             episode_sample = buffer.sample(args.batch_size)
 
             # Truncate batch to only filled timesteps

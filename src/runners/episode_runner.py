@@ -2,6 +2,7 @@ from envs import REGISTRY as env_REGISTRY
 from functools import partial
 from components.episode_buffer import EpisodeBatch
 import numpy as np
+import pdb
 
 
 class EpisodeRunner:
@@ -51,6 +52,7 @@ class EpisodeRunner:
         terminated = False
         episode_return = 0
         self.mac.init_hidden(batch_size=self.batch_size)
+        #pdb.set_trace()
 
         while not terminated:
 

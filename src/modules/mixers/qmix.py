@@ -2,6 +2,7 @@ import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import pdb
 
 
 class QMixer(nn.Module):
@@ -39,6 +40,7 @@ class QMixer(nn.Module):
                                nn.Linear(self.embed_dim, 1))
 
     def forward(self, agent_qs, states):
+        #pdb.set_trace()
         bs = agent_qs.size(0)
         states = states.reshape(-1, self.state_dim)
         agent_qs = agent_qs.view(-1, 1, self.n_agents)
