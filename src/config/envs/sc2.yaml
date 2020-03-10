@@ -29,7 +29,7 @@ env_args:
   seed: null
   heuristic_ai: False
   heuristic_rest: False
-  debug: True
+  debug: False
 
 test_greedy: True
 test_nepisode: 32

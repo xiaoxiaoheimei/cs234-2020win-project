@@ -1,13 +1,17 @@
 from modules.agents import REGISTRY as agent_REGISTRY
 from components.action_selectors import REGISTRY as action_REGISTRY
+from .com_obs_attender import ComObsAttender
 import torch as th
+import pdb
 
 
 # This multi-agent controller shares parameters between agents
 class BasicMAC:
-    def __init__(self, scheme, groups, args):
+    def __init__(self, scheme, groups, args, env=None):
         self.n_agents = args.n_agents
         self.args = args
+        self.obs_attender = ComObsAttender(env)
+        scheme["obs"]["aug_vshape"] = self.obs_attender.getObsSize()
         input_shape = self._get_input_shape(scheme)
         self._build_agents(input_shape)
         self.agent_output_type = args.agent_output_type
@@ -24,6 +28,7 @@ class BasicMAC:
         return chosen_actions
 
     def forward(self, ep_batch, t, test_mode=False):
+        #pdb.set_trace()
         agent_inputs = self._build_inputs(ep_batch, t)
         avail_actions = ep_batch["avail_actions"][:, t]
         agent_outs, self.hidden_states = self.agent(agent_inputs, self.hidden_states)
@@ -79,7 +84,7 @@ class BasicMAC:
         # Other MACs might want to e.g. delegate building inputs to each agent
         bs = batch.batch_size
         inputs = []
-        inputs.append(batch["obs"][:, t])  # b1av
+        inputs.append(self.obs_attender.forward(batch["obs"][:, t]))  # b1av
         if self.args.obs_last_action:
             if t == 0:
                 inputs.append(th.zeros_like(batch["actions_onehot"][:, t]))
@@ -92,7 +97,7 @@ class BasicMAC:
         return inputs
 
     def _get_input_shape(self, scheme):
-        input_shape = scheme["obs"]["vshape"]
+        input_shape = scheme["obs"]["aug_vshape"]
         if self.args.obs_last_action:
             input_shape += scheme["actions_onehot"]["vshape"][0]
         if self.args.obs_agent_id:

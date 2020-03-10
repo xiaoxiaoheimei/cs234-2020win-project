@@ -106,7 +106,7 @@ def run_sequential(args, logger):
                           device="cpu" if args.buffer_cpu_only else args.device)
 
     # Setup multiagent controller here
-    mac = mac_REGISTRY[args.mac](buffer.scheme, groups, args)
+    mac = mac_REGISTRY[args.mac](buffer.scheme, groups, args, runner.get_env())
 
     # Give runner the scheme
     runner.setup(scheme=scheme, groups=groups, preprocess=preprocess, mac=mac)

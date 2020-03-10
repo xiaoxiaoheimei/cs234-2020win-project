@@ -2,6 +2,7 @@ from envs import REGISTRY as env_REGISTRY
 from functools import partial
 from components.episode_buffer import EpisodeBatch
 import numpy as np
+
 import pdb
 
 
@@ -35,6 +36,9 @@ class EpisodeRunner:
     def get_env_info(self):
         return self.env.get_env_info()
 
+    def get_env(self):
+        return self.env
+
     def save_replay(self):
         self.env.save_replay()
 
@@ -61,6 +65,7 @@ class EpisodeRunner:
                 "avail_actions": [self.env.get_avail_actions()],
                 "obs": [self.env.get_obs()]
             }
+            #pre_transition_data["obs"] = self.obs_attender.forward(pre_transition_data["obs"])
 
             self.batch.update(pre_transition_data, ts=self.t)
 
