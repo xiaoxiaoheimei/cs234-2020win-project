@@ -62,13 +62,15 @@ class BasicMAC:
         self.hidden_states = self.agent.init_hidden().unsqueeze(0).expand(batch_size, self.n_agents, -1)  # bav
 
     def parameters(self):
-        return self.agent.parameters()
+        return list(self.agent.parameters()) + list(self.obs_attender.parameters())
+        #return [self.agent.parameters(), self.obs_attender.parameters()]
 
     def load_state(self, other_mac):
         self.agent.load_state_dict(other_mac.agent.state_dict())
 
     def cuda(self):
         self.agent.cuda()
+        self.obs_attender.cuda()
 
     def save_models(self, path):
         th.save(self.agent.state_dict(), "{}/agent.th".format(path))

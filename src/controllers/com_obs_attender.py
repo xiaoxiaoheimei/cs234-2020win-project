@@ -14,9 +14,9 @@ class ComObsAttender(nn.Module):
        self.env = env
        self.extEnvInfo(env)
        #set index buffer
-       self.al_idx = torch.LongTensor([[j for j in range(self.n_agents) if j != i] for i in range(self.n_agents)]).flatten()
+       self.al_idx = torch.LongTensor([[j for j in range(self.n_agents) if j != i] for i in range(self.n_agents)]).flatten().cuda()
        self.register_buffer('al_idx_att', self.al_idx)
-       self.al_vis_idx = torch.LongTensor([self.al_offset + j*self.nf_al for j in range(self.n_agents-1)])
+       self.al_vis_idx = torch.LongTensor([self.al_offset + j*self.nf_al for j in range(self.n_agents-1)]).cuda()
        self.register_buffer('al_vis_idx_att', self.al_vis_idx)
        self.c_att = nn.Linear(self.obs_size, 3*self.obs_size) #produce tuple (query, key, value)
 
