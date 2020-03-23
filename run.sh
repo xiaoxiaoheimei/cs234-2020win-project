@@ -15,6 +15,9 @@ fi
 NV_GPU="$GPU" ${cmd} run \
     --name $name \
     --user $(id -u):$(id -g) \
+    --gpus device=${GPU} \
+    --rm \
+    -it \
     -v `pwd`:/pymarl \
     -t pymarl:1.0 \
     ${@:2}

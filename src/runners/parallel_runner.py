@@ -25,6 +25,7 @@ class ParallelRunner:
             p.daemon = True
             p.start()
 
+        self.env = env_REGISTRY[self.args.env](**self.args.env_args)
         self.parent_conns[0].send(("get_env_info", None))
         self.env_info = self.parent_conns[0].recv()
         self.episode_limit = self.env_info["episode_limit"]
@@ -47,6 +48,9 @@ class ParallelRunner:
         self.scheme = scheme
         self.groups = groups
         self.preprocess = preprocess
+
+    def get_env(self):
+        return self.env
 
     def get_env_info(self):
         return self.env_info
@@ -264,4 +268,3 @@ class CloudpickleWrapper():
     def __setstate__(self, ob):
         import pickle
         self.x = pickle.loads(ob)
-
